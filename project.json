@@ -8,13 +8,74 @@
   "tags": [],
   "targets": {
     "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+      },
+      "configurations": {
+        "production": {
+          "target": "external-mfe:esbuild:production"
+        },
+        "development": {
+          "target": "external-mfe:esbuild:development",
+          "dev": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "external-mfe:serve-original:development",
+        "rebuildDelay": 0,
+        "dev": true,
+        "port": 0
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "external-mfe:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "./src"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectName}"
+      ],
+      "options": {
+        "jestConfig": "jest.config.app.ts"
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "external-mfe:build",
+        "port": 4200,
+        "staticFilePath": "dist/external-mfe/browser",
+        "spa": true
+      }
+    },
+    "esbuild": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/external-mfe",
         "index": "./src/index.html",
         "browser": "./src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [
+          "zone.js",
+          "es-module-shims"
+        ],
         "tsConfig": "tsconfig.app.json",
         "assets": [
           {
@@ -22,7 +83,9 @@
             "input": "public"
           }
         ],
-        "styles": ["./src/styles.css"],
+        "styles": [
+          "./src/styles.css"
+        ],
         "scripts": []
       },
       "configurations": {
@@ -49,44 +112,19 @@
       },
       "defaultConfiguration": "production"
     },
-    "serve": {
+    "serve-original": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "buildTarget": "external-mfe:build:production"
+          "buildTarget": "external-mfe:esbuild:production"
         },
         "development": {
-          "buildTarget": "external-mfe:build:development"
+          "buildTarget": "external-mfe:esbuild:development"
         }
       },
-      "defaultConfiguration": "development"
-    },
-    "extract-i18n": {
-      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "external-mfe:build"
-      }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "options": {
-        "lintFilePatterns": ["./src"]
-      }
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectName}"],
-      "options": {
-        "jestConfig": "jest.config.ts"
-      }
-    },
-    "serve-static": {
-      "executor": "@nx/web:file-server",
-      "options": {
-        "buildTarget": "external-mfe:build",
-        "port": 4200,
-        "staticFilePath": "dist/external-mfe/browser",
-        "spa": true
+        "port": 4300
       }
     }
   }
