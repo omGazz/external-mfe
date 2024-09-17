@@ -13,7 +13,10 @@ module.exports = withNativeFederation({
 
   shared: {
     ...shareAll({ singleton: true, strictVersion: true, requiredVersion: 'auto' }),
-    /**This library is inside an external monorepo */
+    /**This library is inside an external monorepo 
+     * NOT WORKING
+    */
+
     '@nx-ws/foo-library': { singleton: true, strictVersion: true },
   },
 
