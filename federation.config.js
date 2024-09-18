@@ -8,9 +8,11 @@ module.exports = withNativeFederation({
     './Component': '././src/app/app.component.ts',
   },
   remotes: {
-    'shell': 'shell@http://localhost:4200/remoteEntry.js',
+    'shell': 'http://localhost:4200/remoteEntry.json',
   },
-
+  // externals: {
+  //   'shell/FooService': 'shell_service_external',
+  // },
   shared: {
     ...shareAll({ singleton: true, strictVersion: true, requiredVersion: 'auto' }),
     /**This library is inside an external monorepo 
@@ -19,6 +21,18 @@ module.exports = withNativeFederation({
 
     '@nx-ws/foo-library': { singleton: true, strictVersion: true },
   },
+  // additionalShared: [
+  //   {
+  //     packageName: 'shell/FooService',
+  //     requiredVersion: 'auto',
+  //     shareKey: 'shell/FooService',
+  //     shareScope: 'default',
+  //     singleton: true,
+  //     strictVersion: false,
+  //     includeSecondaries: false,
+  //     eager: false,
+  //   }
+  // ],
 
   skip: [
     'rxjs/ajax',
